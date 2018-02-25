@@ -5,6 +5,8 @@
  */
 
 #include<math.h>
+#include<utils.h>
+
 enum{
   NO_ERROR = 0,
   INPUT_ERROR = 1,
@@ -15,6 +17,8 @@ enum{
   AVERAGE = 0,
   LIGHTNESS,
   LUMINOSITY,
+  MIN,
+  MAX,
 } Mode;
 
 int degreesToRadians(double degree, double *radian){
@@ -93,7 +97,7 @@ int rgbToCMYK(int r, int g, int b, double *c, double *m, double *y, double *k){
 
     // computation
 
-    k  = 1 - minMax(_r,_g,_b,MAX);
+    k  = 1 - getMinMax(_r,_g,_b,MAX);
     *c = (1 - _r - k)/(1 - k);
     *m = (1 - _g - k)/(1 - k);
     *y = (1 - _b - k)/(1 - k);
@@ -103,25 +107,33 @@ int rgbToCMYK(int r, int g, int b, double *c, double *m, double *y, double *k){
 
   return error;
 }
-/*
-int *test =NULL ;
-a = 10;
-*test = &a;
-printf("%d", test ot *test)
-// EXpected OUTPUT
-// 10.
-*/
 
-//TODO: create the lat function
+
 int toGrayScale(int *r, int *g, int *b, Mode M){
   //declare variable
   int error = 0 ;
 
-  if(M == AVERAGE){
+  // copy content of pointer variables to regular tyope variable
+  int _r = *r;
+  int _g = *g;
+  int _b = *b;
+  double average, lightness, luminosity = 0;
 
-  }
-  return error;
-}
+  // inputvalidation
+  if( r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255){
+    error = INPUT_ERROR;
+  }else if{
+    // mode selection and computation
+    if(M == AVERAGE){
+      average = (_r + _g + _b) / 3;
+    }else if(M == LIGHTNESS){
+      lightness = (getMinMax(_r,_g,_b,MAX) + getMinMax(_r,_g,_b,MIN))) / 2;
+    }else if(M == LUMINOSITY){
+      luminosity = 0.21 * _r + 0.72 * _g + 0.07 * _b;
+    }
+    return error;
+  }// end input validation check
+}// end function
 
 double getMinMax(double a, double b, double c, Mode m){
 
